@@ -26,6 +26,7 @@ import (
 	"github.com/slok/go-http-metrics/middleware/std"
 	"gorm.io/gorm"
 
+	"github.com/pyroscope-io/pyroscope/ee"
 	adhocserver "github.com/pyroscope-io/pyroscope/pkg/adhoc/server"
 	"github.com/pyroscope-io/pyroscope/pkg/api"
 	"github.com/pyroscope-io/pyroscope/pkg/api/authz"
@@ -177,6 +178,7 @@ func (ctrl *Controller) serverMux() (http.Handler, error) {
 	//  - Make diagnostic endpoints protection configurable.
 	//  - Auth middleware should never redirect - the logic should be moved to the client side.
 	r := mux.NewRouter()
+	ee.AddEnterpriseRoutes(r)
 
 	ctrl.jwtTokenService = service.NewJWTTokenService(
 		[]byte(ctrl.config.Auth.JWTSecret),

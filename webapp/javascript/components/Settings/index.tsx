@@ -8,6 +8,7 @@ import { faKey } from '@fortawesome/free-solid-svg-icons/faKey';
 import { faLock } from '@fortawesome/free-solid-svg-icons/faLock';
 import { faSlidersH } from '@fortawesome/free-solid-svg-icons/faSlidersH';
 import { faUserAlt } from '@fortawesome/free-solid-svg-icons/faUserAlt';
+import { faCreditCard } from '@fortawesome/free-solid-svg-icons/faCreditCard';
 import cx from 'classnames';
 import { withCurrentUser } from '@pyroscope/redux/reducers/user';
 import { User } from '@models/users';
@@ -15,6 +16,10 @@ import Preferences from './Preferences';
 import Security from './Security';
 import Users from './Users';
 import ApiKeys from './APIKeys';
+import { Flavor } from '@ee/config';
+
+// not sure if we should have empty stubs or these conditional imports...
+import Payments from '@ee/Payments';
 
 import styles from './Settings.module.css';
 import UserAddForm from './Users/UserAddForm';
@@ -88,6 +93,22 @@ function Settings(props: ShamefulAny) {
               </li>
             </>
           ) : null}
+          {
+            Flavor === "enterprise" ?
+            <li>
+              <NavLink
+                to={`${url}/payments`}
+                className={(isActive) =>
+                  cx({
+                    [styles.navLink]: true,
+                    [styles.navLinkActive]: isActive,
+                  })
+                }
+              >
+                <Icon icon={faCreditCard} /> Payments
+              </NavLink>
+            </li>
+          : null }
         </ul>
       </nav>
       <div className="main-wrapper">
@@ -111,6 +132,9 @@ function Settings(props: ShamefulAny) {
             <Route exact path={`${path}/api-keys/add`}>
               <APIKeyAddForm />
             </Route>
+            {
+              Flavor === "enterprise" ? <Route exact path={`${path}/payments`}><Payments/></Route>: null
+            }
           </Switch>
         </Box>
       </div>

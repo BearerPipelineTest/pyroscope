@@ -9,6 +9,7 @@ import (
 	"strings"
 
 	"github.com/prometheus/client_golang/prometheus"
+	"github.com/pyroscope-io/pyroscope/ee"
 	"github.com/pyroscope-io/pyroscope/pkg/agent/spy"
 	"github.com/pyroscope-io/pyroscope/webapp"
 )
@@ -42,6 +43,7 @@ GENERAL
   Git SHA:            %s
   Git Dirty Files:    %d
   Embedded Assets:    %t
+  Flavor:             %s
 
 AGENT
   Supported Spies:    %q
@@ -61,6 +63,7 @@ func Summary() string {
 		GitSHA,
 		GitDirty,
 		webapp.AssetsEmbedded,
+		ee.Flavor,
 		spy.SupportedSpies,
 		RbspyGitSHA,
 		PyspyGitSHA,
@@ -78,6 +81,7 @@ type buildInfoJSON struct {
 	GitSHA            string `json:"gitSHA"`
 	GitDirty          int    `json:"gitDirty"`
 	UseEmbeddedAssets bool   `json:"useEmbeddedAssets"`
+	Flavor            string `json:"flavor"`
 	RbspyGitSHA       string `json:"rbspyGitSHA"`
 	PyspyGitSHA       string `json:"pyspyGitSHA"`
 	PhpspyGitSHA      string `json:"phpspyGitSHA"`
@@ -94,6 +98,7 @@ func generateBuildInfoJSON() buildInfoJSON {
 		GitSHA:            GitSHA,
 		GitDirty:          GitDirty,
 		UseEmbeddedAssets: webapp.AssetsEmbedded,
+		Flavor:            ee.Flavor,
 		RbspyGitSHA:       RbspyGitSHA,
 		PyspyGitSHA:       PyspyGitSHA,
 		PhpspyGitSHA:      PhpspyGitSHA,
@@ -120,5 +125,6 @@ func PrometheusBuildLabels() prometheus.Labels {
 		"time":                Time,
 		"revision":            GitSHA,
 		"use_embedded_assets": strconv.FormatBool(webapp.AssetsEmbedded),
+		"flavor":              ee.Flavor,
 	}
 }

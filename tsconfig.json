@@ -13,6 +13,7 @@
       "@utils/*": ["./webapp/javascript/util/*"],
       "@models/*": ["./webapp/javascript/models/*"],
       "@ui/*": ["./webapp/javascript/ui/*"],
+      "@ee/*": ["./ee/webapp/*"],
       "@pyroscope/redux/*": ["./webapp/javascript/redux/*"],
       "@pyroscope/services/*": ["./webapp/javascript/services/*"]
     },
@@ -29,7 +30,7 @@
       "module": "CommonJS"
     }
   },
-  "include": ["./lib", "./webapp/javascript/"],
+  "include": ["./lib", "./webapp/javascript/", "./ee/webapp"],
   "exclude": [
     "webapp/javascript/**/*.spec.ts",
     "webapp/javascript/**/*.spec.tsx",

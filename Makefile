@@ -272,7 +272,17 @@ print-deps-error-message:
 	@echo ""
 	exit 1
 
+.PHONY: e2e-build
 e2e-build: assets-release build
 
+.PHONY: help
 help: ## Show this help
 	@egrep '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | sort | sed 's/Makefile://' | awk 'BEGIN {FS = ":.*##"; printf "\nUsage:\n  make \033[36m<target>\033[0m\n\nTargets:\n"} /^[a-z0-9A-Z_-]+:.*?##/ { printf "  \033[36m%-30s\033[0m %s\n", $$1, $$2 }'
+
+.PHONY: switch-to-oss
+switch-to-oss:
+	rm ee; ln -s ee-shim ee
+
+.PHONY: switch-to-ee
+switch-to-ee:
+	rm ee; ln -s ../ee-test ee
