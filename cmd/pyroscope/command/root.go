@@ -9,9 +9,10 @@ import (
 
 	"github.com/pyroscope-io/pyroscope/pkg/cli"
 	"github.com/pyroscope-io/pyroscope/pkg/config"
+	"github.com/pyroscope-io/pyroscope/pkg/server"
 )
 
-func Execute() error {
+func Execute(ar server.AdditionalRoutes) error {
 	var cfg config.Config
 	rootCmd := newRootCmd(&cfg)
 	rootCmd.SilenceErrors = true
@@ -24,7 +25,7 @@ func Execute() error {
 		newConvertCmd(&cfg.Convert),
 		newDbManagerCmd(&config.CombinedDbManager{DbManager: &cfg.DbManager, Server: &cfg.Server}),
 		newExecCmd(&cfg.Exec),
-		newServerCmd(&cfg.Server),
+		newServerCmd(&cfg.Server, ar),
 		newVersionCmd(),
 	}
 

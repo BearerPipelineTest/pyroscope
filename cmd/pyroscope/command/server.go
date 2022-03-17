@@ -5,9 +5,10 @@ import (
 
 	"github.com/pyroscope-io/pyroscope/pkg/cli"
 	"github.com/pyroscope-io/pyroscope/pkg/config"
+	"github.com/pyroscope-io/pyroscope/pkg/server"
 )
 
-func newServerCmd(cfg *config.Server) *cobra.Command {
+func newServerCmd(cfg *config.Server, ar server.AdditionalRoutes) *cobra.Command {
 	vpr := newViper()
 	serverCmd := &cobra.Command{
 		Use:   "server [flags]",
@@ -15,7 +16,7 @@ func newServerCmd(cfg *config.Server) *cobra.Command {
 
 		DisableFlagParsing: true,
 		RunE: cli.CreateCmdRunFn(cfg, vpr, func(_ *cobra.Command, _ []string) error {
-			srv, err := cli.NewServer(cfg)
+			srv, err := cli.NewServer(cfg, ar)
 			if err != nil {
 				return err
 			}

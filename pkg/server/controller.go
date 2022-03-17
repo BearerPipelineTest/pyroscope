@@ -47,6 +47,8 @@ const (
 	gzHTTPCompressionThreshold = 2000
 )
 
+type AdditionalRoutes func(*mux.Router)
+
 type Controller struct {
 	drained uint32
 
@@ -58,6 +60,7 @@ type Controller struct {
 	notifier   Notifier
 	metricsMdw middleware.Middleware
 	dir        http.FileSystem
+	ar         AdditionalRoutes
 
 	statsMutex sync.Mutex
 	stats      map[string]int
@@ -115,7 +118,7 @@ type TargetsResponse struct {
 	LastScrapeDuration string              `json:"lastScrapeDuration"`
 }
 
-func New(c Config) (*Controller, error) {
+func New(c Config, ar AdditionalRoutes) (*Controller, error) {
 	if c.Configuration.BaseURL != "" {
 		_, err := url.Parse(c.Configuration.BaseURL)
 		if err != nil {
@@ -127,6 +130,7 @@ func New(c Config) (*Controller, error) {
 		config:   c.Configuration,
 		log:      c.Logger,
 		storage:  c.Storage,
+		ar:       ar,
 		exporter: c.MetricsExporter,
 		notifier: c.Notifier,
 		stats:    make(map[string]int),
@@ -177,6 +181,7 @@ func (ctrl *Controller) serverMux() (http.Handler, error) {
 	//  - Make diagnostic endpoints protection configurable.
 	//  - Auth middleware should never redirect - the logic should be moved to the client side.
 	r := mux.NewRouter()
+	ctrl.ar(r)
 
 	ctrl.jwtTokenService = service.NewJWTTokenService(
 		[]byte(ctrl.config.Auth.JWTSecret),

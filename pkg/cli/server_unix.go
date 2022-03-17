@@ -10,10 +10,11 @@ import (
 	"time"
 
 	"github.com/pyroscope-io/pyroscope/pkg/config"
+	"github.com/pyroscope-io/pyroscope/pkg/server"
 )
 
-func NewServer(c *config.Server) (*Server, error) {
-	svc, err := newServerService(c)
+func NewServer(c *config.Server, ar server.AdditionalRoutes) (*Server, error) {
+	svc, err := newServerService(c, ar)
 	if err != nil {
 		return nil, fmt.Errorf("could not initialize server: %w", err)
 	}

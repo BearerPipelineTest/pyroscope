@@ -61,7 +61,7 @@ type serverService struct {
 	group   *errgroup.Group
 }
 
-func newServerService(c *config.Server) (*serverService, error) {
+func newServerService(c *config.Server, ar server.AdditionalRoutes) (*serverService, error) {
 	logLevel, err := logrus.ParseLevel(c.LogLevel)
 	if err != nil {
 		return nil, err
@@ -173,7 +173,7 @@ func newServerService(c *config.Server) (*serverService, error) {
 		ExportedMetricsRegistry: exportedMetricsRegistry,
 		ScrapeManager:           svc.scrapeManager,
 		DB:                      svc.database.DB(),
-	})
+	}, ar)
 	if err != nil {
 		return nil, fmt.Errorf("new server: %w", err)
 	}

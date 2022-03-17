@@ -7,7 +7,7 @@ import (
 )
 
 func main() {
-	if err := command.Execute(); err != nil {
+	if err := command.Execute(nil); err != nil {
 		fatalf("%s %v\n\n", color.RedString("Error:"), err)
 	}
 }
